@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/white"> <!-- Fondo blanco para mayor contraste -->
+
+    <!-- Título de la pantalla -->
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Medicamentos Pendientes"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:paddingBottom="8dp"
+        android:backgroundTint="@color/teal_700"
+        android:elevation="2dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/medicationRecyclerView" />
+
+    <!-- RecyclerView que muestra los medicamentos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/medicationRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/rounded_background"
+        android:clipToPadding="false"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView"
+        app:layout_constraintBottom_toTopOf="@id/calendarButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0" />
+
+    <!-- Botón de calendario con ícono -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/calendarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon ="@android:drawable/ic_menu_my_calendar"
+        app:iconSize="40dp"
+        android:drawablePadding="0dp"
+        android:layout_marginEnd="8dp"
+        style="?attr/borderlessButtonStyle"
+        app:layout_constraintBottom_toBottomOf="@id/addMedicationButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/addMedicationButton"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintTop_toTopOf="@id/addMedicationButton"
+    app:layout_constraintVertical_bias="0" />
+
+    <!-- Add Medication Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addMedicationButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Agregar Medicamento"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/purple_500"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/calendarButton"
+        app:layout_constraintVertical_bias="0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

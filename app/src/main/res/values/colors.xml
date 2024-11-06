@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_500">#69626D</color>  <!-- Gris púrpura oscuro -->
+    <color name="purple_700">#BCAF9C</color>  <!-- Beige claro -->
+    <color name="teal_200">#CBBEB3</color>    <!-- Gris claro cálido -->
+    <color name="teal_700">#D9BDC5</color>    <!-- Rosa suave -->
+    <color name="black">#4B4646</color>       <!-- Gris oscuro para texto -->
+    <color name="white">#FFFFFF</color>       <!-- Blanco -->
+    <color name="blue_light">#87BACA</color>  <!-- Azul claro adicional -->
+    <color name="light_gray">#F5F5F5</color>  <!-- Gris claro -->
+    <color name="dark_gray">#4B4646</color>   <!-- Gris oscuro (sin cambios) -->
+    <color name="gray">#A9A9A9</color>        <!-- Gris medio -->
+</resources>

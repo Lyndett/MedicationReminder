@@ -1,0 +1,10 @@
+<!-- rounded_green_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/purple_700"/> <!-- Color verde claro -->
+    <corners android:radius="16dp"/> <!-- Bordes redondeados -->
+    <padding
+        android:left="16dp"
+        android:right="16dp"
+        android:top="16dp"
+        android:bottom="16dp"/>
+</shape>
