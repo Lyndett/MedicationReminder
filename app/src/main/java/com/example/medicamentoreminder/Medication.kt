@@ -7,7 +7,8 @@ data class Medication(
     val interval: String,
     val intervalInMinutes: Int,
     val medicationIndex: Int,
-    val alarmIDs: MutableList<Int> = mutableListOf()
+    val uniqueID : Int,
+
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -15,9 +16,7 @@ data class Medication(
         parcel.readString() ?: "",
         parcel.readInt(),
         parcel.readInt(),
-        mutableListOf<Int>().apply {
-            parcel.readList(this, Int::class.java.classLoader)
-        }
+        parcel.readInt()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -26,7 +25,7 @@ data class Medication(
         parcel.writeString(interval)
         parcel.writeInt(intervalInMinutes)
         parcel.writeInt(medicationIndex)
-        parcel.writeList(alarmIDs)
+        parcel.writeInt(uniqueID)
     }
 
     override fun describeContents(): Int {

@@ -60,29 +60,49 @@ class EditMedicationActivity : AppCompatActivity() {
     }
     private fun saveUpdatedMedication() {
         if (medicationIndex != -1) {
-            // Actualizar el medicamento en la lista
-            medications[medicationIndex] = Medication(
+            // Primero, obtenemos el medicamento antiguo
+            val oldMedication = medications[medicationIndex]
+            MedicationUtils.cancelAlarm(this, oldMedication.uniqueID)
+            MedicationUtils.cancelNotification(this, oldMedication.uniqueID)
+            // Cancelamos las alarmas y notificaciones anteriores
+            /*oldMedication.alarmIDs.forEach { alarmID ->
+                Log.d("Saveupdated EditMedication", "Cancelando alarma antes de eliminar o editar: $alarmID")
+
+
+            }
+            oldMedication.alarmIDs.clear()*/
+            // Ahora, actualizamos el medicamento con los nuevos valores
+            val updatedMedication = Medication(
                 name = nameEditText.text.toString(),
                 quantity = quantityEditText.text.toString(),
                 interval = intervalEditText.text.toString(),
                 intervalInMinutes = MedicationUtils.parseIntervalToMinutes(intervalEditText.text.toString()),
-                medicationIndex = medicationIndex
+                medicationIndex = medicationIndex,
+                uniqueID = oldMedication.uniqueID
             )
 
-            // Guardar los cambios en SharedPreferences
+            // Actualizamos el medicamento en la lista
+            medications[medicationIndex] = updatedMedication
+
+            // Guardamos los cambios en SharedPreferences
             MedicationUtils.saveMedications(sharedPreferences, medications)
 
-            // Devolver los datos actualizados a MedicationDetailsActivity
-            val resultIntent = Intent().apply {
-                putExtra("medName", nameEditText.text.toString())
-                putExtra("quantity", quantityEditText.text.toString())
-                putExtra("interval", intervalEditText.text.toString())
+            // Establecemos la nueva alarma para el medicamento editado
+            MedicationUtils.scheduleAlarm(this, updatedMedication, oldMedication.uniqueID)
+
+            // Devolvemos los datos actualizados a MedicationDetailsActivity
+            val resultIntent = Intent(applicationContext, AlarmReceiver::class.java).apply {
+                action = "com.example.ALARM_ACTION"
+                putExtra("medName", updatedMedication.name)
+                putExtra("quantity", updatedMedication.quantity)
+                putExtra("interval", updatedMedication.interval)
                 putExtra("medicationIndex", medicationIndex)
             }
             setResult(RESULT_OK, resultIntent)
             finish() // Terminar la actividad después de guardar
         }
     }
+
     private fun showCustomTimePickerDialog() {
         MedicationUtils.showTimePickerDialog(this, onTimeSelected = { time ->
             intervalEditText.setText(time)

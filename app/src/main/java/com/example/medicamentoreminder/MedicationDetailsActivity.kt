@@ -4,6 +4,7 @@ import Medication
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -67,14 +68,16 @@ class MedicationDetailsActivity : AppCompatActivity() {
         // Lógica para eliminar el medicamento
         deleteButton.setOnClickListener {
             if (medicationIndex != -1) {
+                // Utiliza MedicationUtils para eliminar el medicamento
+
+                    MedicationUtils.cancelAlarm(this, medications.get(medicationIndex).uniqueID)
+                    MedicationUtils.cancelNotification(this, medications.get(medicationIndex).uniqueID)
+
                 val resultIntent = Intent().apply {
                     putExtra("delete", true) // Indica que se debe eliminar
                     putExtra("medicationIndex", medicationIndex) // Envía el índice del medicamento
                 }
-
-                // Utiliza MedicationUtils para eliminar el medicamento
                 MedicationUtils.deleteMedication(this, medicationIndex, medications)
-
                 setResult(RESULT_OK, resultIntent)
                 finish() // Termina la actividad y regresa a MainScreenActivity
             }
@@ -92,6 +95,7 @@ class MedicationDetailsActivity : AppCompatActivity() {
             val updatedName = data?.getStringExtra("medName")
             val updatedQuantity = data?.getStringExtra("quantity")
             val updatedInterval = data?.getStringExtra("interval")
+            val uptatedUniqueID = data?.getIntExtra("uniqueID", -1)
 
             // Actualizar la lista de medicamentos con los nuevos datos
             if (medicationIndex != -1) {
@@ -100,7 +104,8 @@ class MedicationDetailsActivity : AppCompatActivity() {
                     quantity = updatedQuantity ?: "",
                     interval = updatedInterval ?: "",
                     intervalInMinutes = MedicationUtils.parseIntervalToMinutes(updatedInterval ?: "00:00"),
-                    medicationIndex = medicationIndex // Este índice es el mismo
+                    medicationIndex = medicationIndex, // Este índice es el mismo
+                    uniqueID = uptatedUniqueID ?: -1
                 )
 
                 // Devolver los datos editados a MainScreenActivity

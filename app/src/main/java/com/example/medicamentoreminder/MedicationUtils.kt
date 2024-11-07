@@ -33,14 +33,14 @@ object MedicationUtils {
         Log.d("MedicationUtils", "Configurando alarma con alarmID: $alarmID para ${medication.name}")
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java).apply {
+        val intent = Intent(context.applicationContext, AlarmReceiver::class.java).apply {
+            action = "com.example.ALARM_ACTION"  // Custom action to identify the intent
             putExtra("medName", medication.name)
             putExtra("quantity", medication.quantity)
-            putExtra("interval", medication.intervalInMinutes)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context,
+            context.applicationContext,
             alarmID,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -56,24 +56,20 @@ object MedicationUtils {
             pendingIntent
         )
 
-        // Añadir el alarmID a la lista
-        medication.alarmIDs.add(alarmID)
-
-        // Verificar que se añadió el alarmID correctamente
-        Log.d("MedicationUtils", "alarmIDs actualizados: ${medication.alarmIDs}")
     }
 
+    fun cancelAlarm(context: Context, uniqueID: Int) {
 
-    fun cancelAlarm(context: Context, alarmID: Int) {
-        Log.d("MedicationUtils", "Cancelando alarma con alarmID: $alarmID")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java)
+        val intent = Intent(context.applicationContext, AlarmReceiver::class.java).apply {
+            action = "com.example.ALARM_ACTION"  // Custom action to identify the intent
+        }
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            alarmID,
+            context.applicationContext,
+            uniqueID,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.cancel(pendingIntent)
@@ -82,6 +78,7 @@ object MedicationUtils {
 
     fun cancelNotification(context: Context, uniqueID: Int) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        Log.d("cancelnotification", "Cancelando alarma antes de eliminar o editar: $uniqueID")
         notificationManager.cancel(uniqueID)
     }
 
@@ -89,14 +86,11 @@ object MedicationUtils {
         // Obtener el medicamento
         val medication = medications[medicationIndex]
 
-        // Log para verificar qué alarmas se están cancelando
-        Log.d("MedicationUtils", "Eliminando medicamento con alarmIDs: ${medication.alarmIDs}")
-
         // Cancelar todas las alarmas
-        medication.alarmIDs.forEach { alarmID ->
-            cancelAlarm(context, alarmID)
-            cancelNotification(context, alarmID)
-        }
+
+            cancelAlarm(context, medication.uniqueID)
+            cancelNotification(context, medication.uniqueID)
+
 
         // Eliminar el medicamento de la lista de SharedPreferences
         deleteMedicationFromSharedPreferences(context, medicationIndex)

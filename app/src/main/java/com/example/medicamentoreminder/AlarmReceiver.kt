@@ -20,7 +20,7 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val medName = intent.getStringExtra("medName")
         val quantity = intent.getStringExtra("quantity")
-        val medicationIndex = intent.getIntExtra("medicationIndex", -1)
+        val uniqueID = intent.getIntExtra("uniqueID", -1)
 
         // Crea un canal de notificación
         val channelId = "medication_channel"
@@ -28,17 +28,21 @@ class AlarmReceiver : BroadcastReceiver() {
 
         // Verifica y solicita permisos de notificación
         if (isNotificationPermissionGranted(context)) {
-            createNotification(context, medName, quantity, medicationIndex, channelId)
+            createNotification(context, medName, quantity, uniqueID, channelId)
         }
     }
 
-    private fun createNotification(context: Context, medName: String?, quantity: String?, medicationIndex: Int, channelId: String) {
-        val uniqueIntent = createNotificationIntent(context, medName, quantity, medicationIndex)
+    private fun createNotification(context: Context, medName: String?, quantity: String?, uniqueID: Int, channelId: String) {
+        val intent = Intent(context.applicationContext, AlarmReceiver::class.java).apply {
+            action = "com.example.ALARM_ACTION"
+            putExtra("medName", medName)
+            putExtra("quantity", quantity)
+        }
 
         val pendingIntent = PendingIntent.getActivity(
-            context,
-            medicationIndex, // Usa medicationIndex para la consistencia
-            uniqueIntent,
+            context.applicationContext,
+            uniqueID,
+            intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -57,14 +61,6 @@ class AlarmReceiver : BroadcastReceiver() {
         NotificationManagerCompat.from(context).notify(uniqueID, notificationBuilder.build())
     }
 
-    private fun createNotificationIntent(context: Context, medName: String?, quantity: String?, medicationIndex: Int): Intent {
-        return Intent(context, MainScreenActivity::class.java).apply {
-            putExtra("medName", medName)
-            putExtra("quantity", quantity)
-            putExtra("medicationIndex", medicationIndex)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-    }
 
     private fun createNotificationChannel(context: Context, channelId: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -84,4 +80,6 @@ class AlarmReceiver : BroadcastReceiver() {
     private fun isNotificationPermissionGranted(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
     }
+
+
 }

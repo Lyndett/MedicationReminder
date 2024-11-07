@@ -75,17 +75,18 @@ class MainScreenActivity : AppCompatActivity() {
             val quantity = it.getStringExtra("quantity")
             val interval = it.getStringExtra("interval")
             val intervalInMinutes = it.getIntExtra("intervalInMinutes", 0)
+            val uniqueID = it.getIntExtra("uniqueID", -1)
 
             if (medName != null && quantity != null && interval != null) {
                 // Utiliza el tamaño actual de la lista como índice del nuevo medicamento
                 val newMedicationIndex = medications.size
-                val newMedication = Medication(medName, quantity, interval, intervalInMinutes, newMedicationIndex)
+                val newMedication = Medication(medName, quantity, interval, intervalInMinutes, newMedicationIndex, uniqueID)
                 medications.add(newMedication)
                 medicationAdapter.notifyItemInserted(medications.size - 1)
                 saveMedications()
 
                 // Programar alarma
-                MedicationUtils.scheduleAlarm(this, newMedication, newMedicationIndex) // Usa el índice como ID
+                MedicationUtils.scheduleAlarm(this, newMedication, uniqueID) // Usa el índice como ID
             }
         }
     }
@@ -96,18 +97,18 @@ class MainScreenActivity : AppCompatActivity() {
             val quantity = it.getStringExtra("quantity")
             val interval = it.getStringExtra("interval")
             val intervalInMinutes = it.getIntExtra("intervalInMinutes", 0)
+            val uniqueID = it.getIntExtra("uniqueID", -1)
 
             if (medName != null && quantity != null && interval != null) {
                 val newMedicationIndex = medications.size // Obtener el índice para el nuevo medicamento
-                val alarmIDs = mutableListOf<Int>() // Inicializar la lista de alarmIDs
 
                 if (isEditing) {
                     // Actualizar medicamento existente
-                    medications[selectedMedicationIndex] = Medication(medName, quantity, interval, intervalInMinutes, selectedMedicationIndex, alarmIDs)
+                    medications[selectedMedicationIndex] = Medication(medName, quantity, interval, intervalInMinutes, selectedMedicationIndex, uniqueID )
                     medicationAdapter.notifyItemChanged(selectedMedicationIndex)
                 } else {
                     // Agregar nuevo medicamento
-                    medications.add(Medication(medName, quantity, interval, intervalInMinutes, newMedicationIndex, alarmIDs))
+                    medications.add(Medication(medName, quantity, interval, intervalInMinutes, newMedicationIndex, uniqueID))
                     medicationAdapter.notifyItemInserted(medications.size - 1)
                 }
                 saveMedications()

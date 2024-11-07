@@ -68,7 +68,8 @@ class AddMedicationActivity : AppCompatActivity() {
             quantity = quantity,
             interval = intervalStr,
             intervalInMinutes = intervalInMinutes,
-            medicationIndex = medicationIndex // Utiliza medicationIndex en lugar de uniqueID
+            medicationIndex = medicationIndex, // Utiliza medicationIndex en lugar de uniqueID
+            uniqueID = (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
         )
 
         // Agregar el nuevo medicamento a la lista y guardar en SharedPreferences usando MedicationUtils
@@ -76,16 +77,17 @@ class AddMedicationActivity : AppCompatActivity() {
         MedicationUtils.saveMedications(getSharedPreferences("medication_prefs", MODE_PRIVATE), medications)
 
         // Programar la alarma usando el nuevo medicamento
-        newMedication.alarmIDs.forEach { alarmID ->
+        /*newMedication.alarmIDs.forEach { alarmID ->
             MedicationUtils.scheduleAlarm(this, newMedication, alarmID)
-        }
+        }*/
 
         val resultIntent = Intent().apply {
             putExtra("medName", medName)
             putExtra("quantity", quantity)
             putExtra("interval", intervalStr)
             putExtra("intervalInMinutes", intervalInMinutes)
-            putExtra("medicationIndex", medicationIndex) // Enviar el medicationIndex
+            putExtra("medicationIndex", medicationIndex)
+            putExtra("uniqueID", newMedication.uniqueID)// Enviar el medicationIndex
         }
         setResult(RESULT_OK, resultIntent)
         finish()
