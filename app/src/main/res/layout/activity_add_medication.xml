@@ -58,7 +58,17 @@
             android:backgroundTint="@color/purple_500"
             android:padding="12dp"
             android:layout_marginBottom="24dp" />
-
+        <EditText
+            android:id="@+id/medDurationInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Por cuantos dias:"
+            android:inputType=""
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:backgroundTint="@color/purple_500"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
         <Button
             android:id="@+id/saveButton"
             android:layout_width="match_parent"

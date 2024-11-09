@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -10,8 +11,10 @@
     <!-- Recuadro verde con contenido -->
     <LinearLayout
         android:id="@+id/greenBox"
-        android:layout_width="369dp"
-        android:layout_height="452dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/rounded_green_background"
         android:orientation="vertical"
         android:padding="16dp"
@@ -53,6 +56,7 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
 
+
         <EditText
             android:id="@+id/quantityEditText"
             android:layout_width="match_parent"
@@ -88,6 +92,27 @@
             android:padding="12dp"
             android:textColorHint="@color/white" />
 
+        <TextView
+            android:id="@+id/durationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Duracion"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/medDurationInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edittext_background"
+            android:backgroundTint="@color/purple_500"
+            android:hint="Por cuantos dias"
+            android:padding="12dp"
+            android:textColorHint="@color/white" />
+
     </LinearLayout>
 
     <!-- Botón de Guardar debajo del recuadro verde -->
@@ -96,36 +121,38 @@
         android:id="@+id/saveButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
         android:backgroundTint="@color/purple_500"
         android:padding="12dp"
         android:text="Guardar"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@id/greenBox"
+        app:layout_constraintBottom_toTopOf="@+id/backButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/greenBox" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/backButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Regresar"
-        android:textColor="@color/white"
         android:backgroundTint="@color/purple_500"
         android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/saveButton"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Regresar"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TimePicker
         android:id="@+id/timePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:timePickerMode="spinner"
-        app:layout_constraintTop_toBottomOf="@id/backButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/backButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,12 +8,13 @@ data class Medication(
     val intervalInMinutes: Int,
     val medicationIndex: Int,
     val uniqueID : Int,
-
+    val daysDuration : Int,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
+        parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),
         parcel.readInt()
@@ -26,6 +27,7 @@ data class Medication(
         parcel.writeInt(intervalInMinutes)
         parcel.writeInt(medicationIndex)
         parcel.writeInt(uniqueID)
+        parcel.writeInt(daysDuration)
     }
 
     override fun describeContents(): Int {

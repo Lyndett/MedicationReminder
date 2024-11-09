@@ -30,6 +30,23 @@ class AlarmReceiver : BroadcastReceiver() {
         if (isNotificationPermissionGranted(context)) {
             createNotification(context, medName, quantity, uniqueID, channelId)
         }
+        val action = intent.action
+
+        if (action == "com.example.ALARM_ACTION_DELETE") {
+            val medicationIndex = intent.getIntExtra("medicationIndex", -1)
+
+            // Usar el contexto de la aplicación para acceder a SharedPreferences
+            val sharedPreferences =
+                context.getSharedPreferences("medications", Context.MODE_PRIVATE)
+
+            // Recuperar la lista de medicamentos desde SharedPreferences
+            val medications = MedicationUtils.getMedicationsFromSharedPreferences(sharedPreferences as Context)
+
+            if (medicationIndex != -1 && medicationIndex < medications.size) {
+                // Llamar a MedicationUtils.deleteMedication para eliminar el medicamento
+                MedicationUtils.deleteMedication(context, medicationIndex, medications)
+            }
+        }
     }
 
     private fun createNotification(context: Context, medName: String?, quantity: String?, uniqueID: Int, channelId: String) {

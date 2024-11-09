@@ -14,6 +14,7 @@ class AddMedicationActivity : AppCompatActivity() {
     private lateinit var medNameInput: EditText
     private lateinit var medQuantityInput: EditText
     private lateinit var medIntervalInput: EditText
+    private lateinit var medDurationInput: EditText
     private lateinit var saveButton: Button
     private lateinit var backButton: Button
     private lateinit var medications: MutableList<Medication>
@@ -26,6 +27,7 @@ class AddMedicationActivity : AppCompatActivity() {
         medNameInput = findViewById(R.id.medNameInput)
         medQuantityInput = findViewById(R.id.medQuantityInput)
         medIntervalInput = findViewById(R.id.medIntervalInput)
+        medDurationInput = findViewById(R.id.medDurationInput)
         saveButton = findViewById(R.id.saveButton)
         backButton = findViewById(R.id.backButton)
 
@@ -51,6 +53,7 @@ class AddMedicationActivity : AppCompatActivity() {
         val medName = medNameInput.text.toString()
         val quantity = medQuantityInput.text.toString()
         val intervalStr = medIntervalInput.text.toString()
+        val durationStr = medDurationInput.text.toString()
 
         if (!MedicationUtils.validateMedicationInput(medName, quantity, intervalStr)) {
             Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
@@ -61,6 +64,11 @@ class AddMedicationActivity : AppCompatActivity() {
 
         // Generar el índice de medicamento (aquí simplemente será el tamaño actual de la lista)
         val medicationIndex = medications.size
+        val daysDuration = if (durationStr.isEmpty()) {
+            0  // Default value if no duration is provided
+        } else {
+            durationStr.toInt()  // Parse to Int if duration is provided
+        }
 
         // Crear nuevo medicamento con el medicationIndex
         val newMedication = Medication(
@@ -69,17 +77,13 @@ class AddMedicationActivity : AppCompatActivity() {
             interval = intervalStr,
             intervalInMinutes = intervalInMinutes,
             medicationIndex = medicationIndex, // Utiliza medicationIndex en lugar de uniqueID
-            uniqueID = (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
+            uniqueID = (System.currentTimeMillis() % Int.MAX_VALUE).toInt(),
+            daysDuration = daysDuration
         )
 
         // Agregar el nuevo medicamento a la lista y guardar en SharedPreferences usando MedicationUtils
         medications.add(newMedication)
         MedicationUtils.saveMedications(getSharedPreferences("medication_prefs", MODE_PRIVATE), medications)
-
-        // Programar la alarma usando el nuevo medicamento
-        /*newMedication.alarmIDs.forEach { alarmID ->
-            MedicationUtils.scheduleAlarm(this, newMedication, alarmID)
-        }*/
 
         val resultIntent = Intent().apply {
             putExtra("medName", medName)
@@ -88,6 +92,7 @@ class AddMedicationActivity : AppCompatActivity() {
             putExtra("intervalInMinutes", intervalInMinutes)
             putExtra("medicationIndex", medicationIndex)
             putExtra("uniqueID", newMedication.uniqueID)// Enviar el medicationIndex
+            putExtra("daysDuration", daysDuration)
         }
         setResult(RESULT_OK, resultIntent)
         finish()

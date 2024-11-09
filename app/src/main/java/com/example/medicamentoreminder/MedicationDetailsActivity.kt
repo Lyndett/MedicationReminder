@@ -4,7 +4,6 @@ import Medication
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +36,8 @@ class MedicationDetailsActivity : AppCompatActivity() {
         val medicationInterval = intent.getStringExtra("interval")
         medicationIndex = intent.getIntExtra("medicationIndex", -1)
         val medication = getMedicationByIndex(medicationIndex)
+        val uniqueID = intent.getIntExtra("uniqueID", -1)
+        val daysDuration = intent.getIntExtra("daysDuration", -1)
 
         // Comprobar si el medicamento existe
         if (medication != null) {
@@ -44,11 +45,13 @@ class MedicationDetailsActivity : AppCompatActivity() {
             val nameTextView: TextView = findViewById(R.id.medicationNameTextView)
             val quantityTextView: TextView = findViewById(R.id.medicationQuantityTextView)
             val intervalTextView: TextView = findViewById(R.id.medicationIntervalTextView)
+            val daysDurationTextView: TextView = findViewById(R.id.medicationDaysDurationTextView)
 
             // Establecer los textos
             nameTextView.text = getString(R.string.medication_name_format, medicationName ?: getString(R.string.name_not_available))
             quantityTextView.text = getString(R.string.medication_quantity_format, medicationQuantity ?: getString(R.string.quantity_not_available))
             intervalTextView.text = getString(R.string.medication_interval_format, medicationInterval ?: getString(R.string.interval_not_available))
+            daysDurationTextView.text = getString(R.string.medication_days_duration_format, daysDuration.toString())
         } else {
             // Mostrar mensaje si no se encuentra el medicamento
             finish() // Finalizar la actividad si no se encuentra el medicamento
@@ -61,6 +64,8 @@ class MedicationDetailsActivity : AppCompatActivity() {
                 putExtra("quantity", medicationQuantity)
                 putExtra("interval", medicationInterval)
                 putExtra("medicationIndex", medicationIndex) // Usa medicationIndex
+                putExtra("uniqueID", uniqueID)
+                putExtra("daysDuration", daysDuration)
             }
             startActivityForResult(intent, EDIT_MEDICATION_REQUEST)
         }
@@ -95,7 +100,8 @@ class MedicationDetailsActivity : AppCompatActivity() {
             val updatedName = data?.getStringExtra("medName")
             val updatedQuantity = data?.getStringExtra("quantity")
             val updatedInterval = data?.getStringExtra("interval")
-            val uptatedUniqueID = data?.getIntExtra("uniqueID", -1)
+            val updatedUniqueID = data?.getIntExtra("uniqueID", -1)
+            val daysDuration = data?.getIntExtra("daysDuration", -1)
 
             // Actualizar la lista de medicamentos con los nuevos datos
             if (medicationIndex != -1) {
@@ -105,7 +111,8 @@ class MedicationDetailsActivity : AppCompatActivity() {
                     interval = updatedInterval ?: "",
                     intervalInMinutes = MedicationUtils.parseIntervalToMinutes(updatedInterval ?: "00:00"),
                     medicationIndex = medicationIndex, // Este índice es el mismo
-                    uniqueID = uptatedUniqueID ?: -1
+                    uniqueID = updatedUniqueID ?: -1,
+                    daysDuration = daysDuration ?: -1
                 )
 
                 // Devolver los datos editados a MainScreenActivity
@@ -114,6 +121,8 @@ class MedicationDetailsActivity : AppCompatActivity() {
                     putExtra("quantity", updatedQuantity)
                     putExtra("interval", updatedInterval)
                     putExtra("medicationIndex", medicationIndex) // Usar el índice seleccionado
+                    putExtra("uniqueID", updatedUniqueID)
+                    putExtra("daysDuration", daysDuration)
                 }
                 setResult(RESULT_OK, resultIntent)
                 finish() // Terminar la actividad después de establecer el resultado

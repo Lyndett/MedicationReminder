@@ -53,6 +53,8 @@ class MainScreenActivity : AppCompatActivity() {
             putExtra("quantity", medication.quantity)
             putExtra("interval", medication.interval)
             putExtra("medicationIndex", position)
+            putExtra("uniqueID", medication.uniqueID)
+            putExtra("daysDuration", medication.daysDuration)
             putExtra("isEditing", true) // Indica que se está editando
         }
         startActivityForResult(intent, EDIT_MEDICATION_REQUEST)
@@ -76,11 +78,12 @@ class MainScreenActivity : AppCompatActivity() {
             val interval = it.getStringExtra("interval")
             val intervalInMinutes = it.getIntExtra("intervalInMinutes", 0)
             val uniqueID = it.getIntExtra("uniqueID", -1)
+            val daysDuration = it.getIntExtra("daysDuration", -1)
 
             if (medName != null && quantity != null && interval != null) {
                 // Utiliza el tamaño actual de la lista como índice del nuevo medicamento
                 val newMedicationIndex = medications.size
-                val newMedication = Medication(medName, quantity, interval, intervalInMinutes, newMedicationIndex, uniqueID)
+                val newMedication = Medication(medName, quantity, interval, intervalInMinutes, newMedicationIndex, uniqueID, daysDuration)
                 medications.add(newMedication)
                 medicationAdapter.notifyItemInserted(medications.size - 1)
                 saveMedications()
@@ -98,17 +101,18 @@ class MainScreenActivity : AppCompatActivity() {
             val interval = it.getStringExtra("interval")
             val intervalInMinutes = it.getIntExtra("intervalInMinutes", 0)
             val uniqueID = it.getIntExtra("uniqueID", -1)
+            val daysDuration = it.getIntExtra("daysDuration", -1)
 
             if (medName != null && quantity != null && interval != null) {
                 val newMedicationIndex = medications.size // Obtener el índice para el nuevo medicamento
 
                 if (isEditing) {
                     // Actualizar medicamento existente
-                    medications[selectedMedicationIndex] = Medication(medName, quantity, interval, intervalInMinutes, selectedMedicationIndex, uniqueID )
+                    medications[selectedMedicationIndex] = Medication(medName, quantity, interval, intervalInMinutes, selectedMedicationIndex, uniqueID, daysDuration)
                     medicationAdapter.notifyItemChanged(selectedMedicationIndex)
                 } else {
                     // Agregar nuevo medicamento
-                    medications.add(Medication(medName, quantity, interval, intervalInMinutes, newMedicationIndex, uniqueID))
+                    medications.add(Medication(medName, quantity, interval, intervalInMinutes, newMedicationIndex, uniqueID, daysDuration))
                     medicationAdapter.notifyItemInserted(medications.size - 1)
                 }
                 saveMedications()

@@ -58,6 +58,16 @@
                 android:textColor="@color/black"
                 android:layout_marginTop="16dp" />
 
+            <!-- Mostrar la cantidad de días -->
+            <TextView
+                android:id="@+id/medicationDaysDurationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/medication_days_duration_format"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp" />
+
         </LinearLayout>
 
         <!-- Contenedor para los botones en la parte inferior -->

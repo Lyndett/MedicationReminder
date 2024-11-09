@@ -49,30 +49,56 @@ object MedicationUtils {
         val triggerTime = System.currentTimeMillis() + (medication.intervalInMinutes * 60 * 1000)
         val intervalMillis = medication.intervalInMinutes * 60 * 1000L
 
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            triggerTime,
-            intervalMillis,
-            pendingIntent
-        )
+            alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                triggerTime,
+                intervalMillis,
+                pendingIntent
+            )
+        // Alarma para eliminar el medicamento después de X días
+        if (medication.daysDuration != 0) {
+            val endTime = System.currentTimeMillis() + (medication.daysDuration * 24 * 60 * 60 * 1000L)
 
+            val deleteIntent = Intent(context, AlarmReceiver::class.java).apply {
+                action = "com.example.ALARM_ACTION_DELETE"
+                putExtra("medicationIndex", medication.medicationIndex)
+            }
+
+            val deletePendingIntent = PendingIntent.getBroadcast(
+                context.applicationContext,
+                alarmID,  // Usamos el mismo ID para la alarma de eliminación
+                deleteIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            // Configura la alarma de eliminación
+            alarmManager.setExact(
+                AlarmManager.RTC_WAKEUP,
+                endTime,
+                deletePendingIntent
+            )
+        }
     }
 
     fun cancelAlarm(context: Context, uniqueID: Int) {
-
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context.applicationContext, AlarmReceiver::class.java).apply {
-            action = "com.example.ALARM_ACTION"  // Custom action to identify the intent
+            action = "com.example.ALARM_ACTION"
+            putExtra("medName", "")
+            putExtra("quantity", "")
         }
 
+        // Using FLAG_CANCEL_CURRENT to ensure any previous intent instance is canceled
         val pendingIntent = PendingIntent.getBroadcast(
             context.applicationContext,
             uniqueID,
             intent,
-            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        alarmManager.cancel(pendingIntent)
+        if (pendingIntent != null) {
+            alarmManager.cancel(pendingIntent)
+        }
     }
 
 
@@ -160,5 +186,12 @@ object MedicationUtils {
         val json = Gson().toJson(medications)
         editor.putString("medications", json)
         editor.apply()
+    }
+
+    fun getMedicationsFromSharedPreferences(context: Context): List<Medication> {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences("medications", Context.MODE_PRIVATE)
+        val json = sharedPreferences.getString("medications", null)
+        val type = object : TypeToken<List<Medication>>() {}.type
+        return Gson().fromJson(json, type) ?: emptyList()
     }
 }

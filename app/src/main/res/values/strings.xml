@@ -5,6 +5,7 @@
 
     <string name="medication_quantity_format">Cantidad por tomar: %1$s</string>
         <string name="medication_interval_format">Cada cuanto tiempo: %1$s</string>
+    <string name="medication_days_duration_format">Duracion en días: %1$s</string>
         <string name="name_not_available">Nombre no disponible</string>
         <string name="quantity_not_available">Cantidad no disponible</string>
         <string name="interval_not_available">Intervalo no disponible</string>
