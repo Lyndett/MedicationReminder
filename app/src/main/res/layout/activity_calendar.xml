@@ -167,7 +167,7 @@
         app:layout_constraintTop_toBottomOf="@id/linearLayout">
 
 
-    <GridView
+        <GridView
             android:id="@+id/calendarGridView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -177,7 +177,9 @@
             android:padding="8dp"
             android:stretchMode="columnWidth"
             android:textColor="@color/black"
-            android:verticalSpacing="18dp" />
+            android:verticalSpacing="32dp"
+        android:columnWidth="0dp"
+        android:layout_columnWeight="1" />
 
     </LinearLayout>
 

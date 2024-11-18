@@ -41,6 +41,12 @@
         <activity
             android:name=".AddMedicationActivity"
             android:exported="false" /> <!-- Ajusta esta propiedad según necesites -->
+        <activity android:name=".EventDetailsActivity">
+            <!-- Opcional: Configura atributos de la actividad si es necesario -->
+        </activity>
+        <activity android:name=".AddEventActivity">
+            <!-- Opcional: Configura atributos de la actividad si es necesario -->
+        </activity>
 
         <receiver android:name=".AlarmReceiver"
             android:exported="true"

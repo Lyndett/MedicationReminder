@@ -38,6 +38,7 @@ class EditEventActivity : Activity() {
             val resultIntent = Intent()
             resultIntent.putExtra("UPDATED_TITLE", updatedTitle)
             resultIntent.putExtra("UPDATED_NOTE", updatedNote)
+
             setResult(RESULT_OK, resultIntent)
             finish() // Cerrar la actividad de edición
         }
